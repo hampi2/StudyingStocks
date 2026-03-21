@@ -100,7 +100,7 @@ export default function SentimentPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center">
-            <svg viewBox="0 0 200 120" className="w-64 h-auto">
+            <svg viewBox="0 0 200 120" className="w-48 md:w-64 h-auto">
               {/* 배경 반원 */}
               <path
                 d={`M ${gaugeCx - gaugeRadius} ${gaugeCy} A ${gaugeRadius} ${gaugeRadius} 0 0 1 ${gaugeCx + gaugeRadius} ${gaugeCy}`}
@@ -210,11 +210,11 @@ export default function SentimentPage() {
           <CardTitle>종목별 감성 분석</CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer width="100%" height={200}>
             <BarChart
               data={stockSentiments}
               layout="vertical"
-              margin={{ left: 80 }}
+              margin={{ left: 60 }}
             >
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis type="number" domain={[0, 100]} className="text-xs" />
@@ -240,18 +240,18 @@ export default function SentimentPage() {
 
       {/* 뉴스 피드 */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
             <Newspaper className="size-5" />
             뉴스 피드
           </h2>
-          <div className="flex items-center gap-2">
-            <Filter className="size-4 text-muted-foreground" />
+          <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+            <Filter className="size-4 text-muted-foreground shrink-0" />
             {filterOptions.map((opt) => (
               <button
                 key={opt.id}
                 onClick={() => setSelectedFilter(opt.id)}
-                className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                className={`px-2.5 md:px-3 py-1 rounded-full text-xs md:text-sm transition-colors ${
                   selectedFilter === opt.id
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:bg-muted/80"

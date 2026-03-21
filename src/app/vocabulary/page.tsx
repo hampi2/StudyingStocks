@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useVocabularyStore, useGamificationStore } from "@/lib/store";
-import { glossaryTerms } from "@/content/glossary/data";
+import { glossaryTerms } from "@/content/glossary";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

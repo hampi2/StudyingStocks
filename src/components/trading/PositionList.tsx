@@ -60,7 +60,7 @@ export function PositionList() {
                   </div>
 
                   {/* 수량 & 가격 정보 */}
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">보유 수량</span>
                       <span className="font-medium">{pos.quantity.toLocaleString()}주</span>

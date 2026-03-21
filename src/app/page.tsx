@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   BookOpen,
   BarChart3,
@@ -22,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { courses } from "@/content/courses/data";
+import { courses } from "@/content/courses";
 
 // 주요 기능 카드 데이터
 const features = [
@@ -73,7 +74,7 @@ export default function Home() {
       <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background py-20 md:py-32">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-6">
-            <TrendingUp className="h-10 w-10 text-primary" />
+            <Image src="/logo.svg" alt="StudyingStocks" width={48} height={48} className="rounded-lg" />
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
               StudyingStocks
             </h1>

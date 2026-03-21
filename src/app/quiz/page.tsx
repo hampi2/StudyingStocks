@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { quizzes } from "@/content/courses/quizzes";
-import { courses } from "@/content/courses/data";
+import { courses } from "@/content/courses";
 import { useProgressStore } from "@/lib/store";
 
 // 퀴즈 목록 페이지

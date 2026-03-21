@@ -129,7 +129,7 @@ export default function FundamentalPage() {
       </div>
 
       {/* 빠른 링크 */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Link href="/fundamental/valuation">
           <Card className="hover:border-primary transition-colors cursor-pointer h-full">
             <CardContent className="p-4 flex items-center gap-3">
@@ -217,18 +217,18 @@ export default function FundamentalPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/30">
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[200px]">
+                  <th className="text-left px-3 md:px-4 py-3 font-medium text-muted-foreground min-w-[140px] md:min-w-[200px]">
                     항목
                   </th>
                   {data.years.map((year) => (
                     <th
                       key={year}
-                      className="text-right px-4 py-3 font-medium text-muted-foreground min-w-[120px]"
+                      className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground min-w-[80px] md:min-w-[120px]"
                     >
                       {year}
                     </th>
                   ))}
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground min-w-[80px]">
+                  <th className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground min-w-[60px] md:min-w-[80px]">
                     YoY
                   </th>
                 </tr>

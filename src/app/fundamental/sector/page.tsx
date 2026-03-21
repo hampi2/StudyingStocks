@@ -122,23 +122,23 @@ export default function SectorPage() {
       </div>
 
       {/* 섹터 평균 지표 */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 md:gap-3">
         <Card>
-          <CardContent className="p-4 text-center">
+          <CardContent className="p-3 md:p-4 text-center">
             <p className="text-xs text-muted-foreground">평균 PER</p>
-            <p className="text-xl font-bold">{sector.averagePer}x</p>
+            <p className="text-lg md:text-xl font-bold">{sector.averagePer}x</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
+          <CardContent className="p-3 md:p-4 text-center">
             <p className="text-xs text-muted-foreground">평균 PBR</p>
-            <p className="text-xl font-bold">{sector.averagePbr}x</p>
+            <p className="text-lg md:text-xl font-bold">{sector.averagePbr}x</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
+          <CardContent className="p-3 md:p-4 text-center">
             <p className="text-xs text-muted-foreground">평균 ROE</p>
-            <p className="text-xl font-bold">{sector.averageRoe}%</p>
+            <p className="text-lg md:text-xl font-bold">{sector.averageRoe}%</p>
           </CardContent>
         </Card>
       </div>
@@ -178,11 +178,11 @@ export default function SectorPage() {
       {/* 기업 비교 테이블 */}
       <Card>
         <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <CardTitle className="text-lg">기업별 상세 비교</CardTitle>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <ArrowUpDown className="h-3 w-3" />
-              정렬:
+            <div className="flex items-center gap-1 text-xs text-muted-foreground flex-wrap">
+              <ArrowUpDown className="h-3 w-3 shrink-0" />
+              <span className="shrink-0">정렬:</span>
               {(Object.keys(sortLabels) as SortKey[]).map((key) => (
                 <button
                   key={key}
@@ -205,20 +205,20 @@ export default function SectorPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/30">
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">비교</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">기업명</th>
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">PER</th>
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">PBR</th>
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">ROE</th>
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">EV/EBITDA</th>
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">배당률</th>
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">부채비율</th>
+                  <th className="text-left px-3 md:px-4 py-3 font-medium text-muted-foreground">비교</th>
+                  <th className="text-left px-3 md:px-4 py-3 font-medium text-muted-foreground">기업명</th>
+                  <th className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground">PER</th>
+                  <th className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground">PBR</th>
+                  <th className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground">ROE</th>
+                  <th className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">EV/EBITDA</th>
+                  <th className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">배당률</th>
+                  <th className="text-right px-3 md:px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">부채비율</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedCompanies.map((c) => (
                   <tr key={c.companyId} className="border-b hover:bg-muted/30 transition-colors">
-                    <td className="px-4 py-2.5">
+                    <td className="px-3 md:px-4 py-2.5">
                       <input
                         type="checkbox"
                         checked={compareIds.includes(c.companyId)}
@@ -226,22 +226,22 @@ export default function SectorPage() {
                         className="accent-primary"
                       />
                     </td>
-                    <td className="px-4 py-2.5">
-                      <span className="font-medium">{c.companyName}</span>
-                      <span className="text-xs text-muted-foreground ml-2">{c.ticker}</span>
+                    <td className="px-3 md:px-4 py-2.5">
+                      <span className="font-medium text-sm">{c.companyName}</span>
+                      <span className="text-xs text-muted-foreground ml-1 hidden sm:inline">{c.ticker}</span>
                     </td>
-                    <td className={`text-right px-4 py-2.5 tabular-nums ${c.per < sector.averagePer ? "text-red-500 font-medium" : ""}`}>
+                    <td className={`text-right px-3 md:px-4 py-2.5 tabular-nums ${c.per < sector.averagePer ? "text-red-500 font-medium" : ""}`}>
                       {c.per}x
                     </td>
-                    <td className={`text-right px-4 py-2.5 tabular-nums ${c.pbr < sector.averagePbr ? "text-red-500 font-medium" : ""}`}>
+                    <td className={`text-right px-3 md:px-4 py-2.5 tabular-nums ${c.pbr < sector.averagePbr ? "text-red-500 font-medium" : ""}`}>
                       {c.pbr}x
                     </td>
-                    <td className={`text-right px-4 py-2.5 tabular-nums ${c.roe > sector.averageRoe ? "text-red-500 font-medium" : ""}`}>
+                    <td className={`text-right px-3 md:px-4 py-2.5 tabular-nums ${c.roe > sector.averageRoe ? "text-red-500 font-medium" : ""}`}>
                       {c.roe}%
                     </td>
-                    <td className="text-right px-4 py-2.5 tabular-nums">{c.evEbitda}x</td>
-                    <td className="text-right px-4 py-2.5 tabular-nums">{c.dividendYield}%</td>
-                    <td className="text-right px-4 py-2.5 tabular-nums">{c.debtRatio}%</td>
+                    <td className="text-right px-3 md:px-4 py-2.5 tabular-nums hidden sm:table-cell">{c.evEbitda}x</td>
+                    <td className="text-right px-3 md:px-4 py-2.5 tabular-nums hidden sm:table-cell">{c.dividendYield}%</td>
+                    <td className="text-right px-3 md:px-4 py-2.5 tabular-nums hidden md:table-cell">{c.debtRatio}%</td>
                   </tr>
                 ))}
               </tbody>
@@ -260,7 +260,7 @@ export default function SectorPage() {
             </p>
           </CardHeader>
           <CardContent>
-            <div className="h-[350px]">
+            <div className="h-[250px] md:h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData}>
                   <PolarGrid />

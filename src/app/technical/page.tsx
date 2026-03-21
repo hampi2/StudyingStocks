@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CandlestickChart } from "@/components/chart/CandlestickChart";
 import { IndicatorChart } from "@/components/chart/IndicatorChart";
+import { useIsMobile } from "@/lib/hooks";
 import {
   getSampleData,
   calculateMA,
@@ -62,6 +63,7 @@ const indicators = [
 // 기술적 분석 도구 학습 페이지
 export default function TechnicalPage() {
   const [selectedIndicator, setSelectedIndicator] = useState("ma");
+  const isMobile = useIsMobile(); // 모바일 여부
   const data = getSampleData("samsung");
 
   // 각 지표별 데이터 계산
@@ -89,9 +91,9 @@ export default function TechnicalPage() {
   const currentIndicator = indicators.find((i) => i.id === selectedIndicator)!;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">기술적 분석 도구</h1>
+    <div className="container mx-auto px-4 py-6 md:py-8">
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold mb-2">기술적 분석 도구</h1>
         <p className="text-muted-foreground">
           주요 보조지표를 실제 차트에서 확인하며 사용법을 배워보세요.
         </p>
@@ -137,8 +139,8 @@ export default function TechnicalPage() {
         {/* 이동평균선 */}
         {selectedIndicator === "ma" && (
           <>
-            <div className="flex items-center gap-4 mb-2">
-              <h3 className="text-lg font-semibold">삼성전자 - 이동평균선</h3>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 mb-2">
+              <h3 className="text-base md:text-lg font-semibold">삼성전자 - 이동평균선</h3>
               <div className="flex gap-2 text-xs">
                 <span style={{ color: "#f59e0b" }}>■ 5일선</span>
                 <span style={{ color: "#3b82f6" }}>■ 20일선</span>
@@ -152,7 +154,7 @@ export default function TechnicalPage() {
                 { period: 20, data: ma20, color: "#3b82f6" },
                 { period: 60, data: ma60, color: "#ef4444" },
               ]}
-              height={450}
+              height={isMobile ? 280 : 450}
             />
           </>
         )}
@@ -160,39 +162,39 @@ export default function TechnicalPage() {
         {/* RSI */}
         {selectedIndicator === "rsi" && (
           <>
-            <h3 className="text-lg font-semibold mb-2">
+            <h3 className="text-base md:text-lg font-semibold mb-2">
               삼성전자 - RSI (14일)
             </h3>
-            <CandlestickChart data={data} height={350} />
-            <IndicatorChart type="RSI" data={rsiChartData} height={200} />
+            <CandlestickChart data={data} height={isMobile ? 220 : 350} />
+            <IndicatorChart type="RSI" data={rsiChartData} height={isMobile ? 150 : 200} />
           </>
         )}
 
         {/* MACD */}
         {selectedIndicator === "macd" && (
           <>
-            <h3 className="text-lg font-semibold mb-2">삼성전자 - MACD</h3>
-            <CandlestickChart data={data} height={350} />
-            <IndicatorChart type="MACD" data={macdChartData} height={200} />
+            <h3 className="text-base md:text-lg font-semibold mb-2">삼성전자 - MACD</h3>
+            <CandlestickChart data={data} height={isMobile ? 220 : 350} />
+            <IndicatorChart type="MACD" data={macdChartData} height={isMobile ? 150 : 200} />
           </>
         )}
 
         {/* 볼린저밴드 */}
         {selectedIndicator === "bb" && (
           <>
-            <h3 className="text-lg font-semibold mb-2">
+            <h3 className="text-base md:text-lg font-semibold mb-2">
               삼성전자 - 볼린저밴드 (20일, 2σ)
             </h3>
             <CandlestickChart
               data={data}
               bollingerBands={bbData}
-              height={450}
+              height={isMobile ? 280 : 450}
             />
           </>
         )}
       </div>
 
-      <Separator className="my-8" />
+      <Separator className="my-4 md:my-8" />
 
       {/* 학습 팁 */}
       <Card>

@@ -15,7 +15,7 @@ export function PortfolioSummary() {
   const profitLoss = totalValue - initialValue;
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 md:gap-3 lg:grid-cols-4">
       {/* 총 평가액 */}
       <Card>
         <CardContent className="p-4">
@@ -23,7 +23,7 @@ export function PortfolioSummary() {
             <Wallet className="h-4 w-4" />
             총 평가액
           </div>
-          <p className="text-xl font-bold">₩{Math.round(totalValue).toLocaleString()}</p>
+          <p className="text-lg md:text-xl font-bold truncate">₩{Math.round(totalValue).toLocaleString()}</p>
         </CardContent>
       </Card>
 
@@ -71,7 +71,7 @@ export function PortfolioSummary() {
             <PiggyBank className="h-4 w-4" />
             원화 잔고
           </div>
-          <p className="text-xl font-bold">₩{Math.round(cashKRW).toLocaleString()}</p>
+          <p className="text-lg md:text-xl font-bold truncate">₩{Math.round(cashKRW).toLocaleString()}</p>
         </CardContent>
       </Card>
 
@@ -82,7 +82,7 @@ export function PortfolioSummary() {
             <PiggyBank className="h-4 w-4" />
             달러 잔고
           </div>
-          <p className="text-xl font-bold">${cashUSD.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+          <p className="text-lg md:text-xl font-bold truncate">${cashUSD.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
         </CardContent>
       </Card>
     </div>

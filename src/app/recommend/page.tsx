@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useProgressStore, useTradingStore, useGamificationStore, useOnboardingStore } from "@/lib/store";
 import type { InvestorType } from "@/types";
-import { courses } from "@/content/courses/data";
+import { courses } from "@/content/courses";
 import { quizzes } from "@/content/courses/quizzes";
 import type { LearningRecommendation } from "@/types";
 import {

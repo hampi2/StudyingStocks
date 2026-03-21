@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/lib/hooks";
 import {
   ResponsiveContainer,
   LineChart,
@@ -44,25 +45,13 @@ function formatAum(aum: number, market: string): string {
 export default function EtfComparePage() {
   const [mounted, setMounted] = useState(false); // 하이드레이션 방지
   const [selectedIds, setSelectedIds] = useState<string[]>([]); // 선택된 ETF ID 목록
+  const isMobile = useIsMobile(); // 모바일 여부
 
   // 하이드레이션 불일치 방지
   useEffect(() => setMounted(true), []);
 
-  if (!mounted) return null;
-
   // 선택된 ETF 데이터
   const selectedEtfs = etfList.filter((etf) => selectedIds.includes(etf.id));
-
-  // 체크박스 토글 (최대 3개)
-  const toggleSelect = (id: string) => {
-    setSelectedIds((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((x) => x !== id); // 해제
-      }
-      if (prev.length >= 3) return prev; // 최대 3개 제한
-      return [...prev, id]; // 추가
-    });
-  };
 
   // 누적 수익률 차트 데이터 계산
   const cumulativeData = useMemo(() => {
@@ -83,23 +72,37 @@ export default function EtfComparePage() {
       });
       return point;
     });
-  }, [selectedEtfs]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedIds]);
+
+  // 체크박스 토글 (최대 3개)
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((x) => x !== id); // 해제
+      }
+      if (prev.length >= 3) return prev; // 최대 3개 제한
+      return [...prev, id]; // 추가
+    });
+  };
+
+  if (!mounted) return null;
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8 space-y-8">
       {/* 헤더 */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
         <Link href="/etf">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="size-5" />
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <BarChart3 className="size-8 text-primary" />
+          <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+            <BarChart3 className="size-6 md:size-8 text-primary" />
             ETF 비교 도구
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm md:text-base text-muted-foreground">
             2~3개의 ETF를 선택하여 주요 지표를 비교합니다.
           </p>
         </div>
@@ -243,7 +246,7 @@ export default function EtfComparePage() {
               <CardTitle>누적 수익률 비교</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={350}>
+              <ResponsiveContainer width="100%" height={isMobile ? 250 : 350}>
                 <LineChart data={cumulativeData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis

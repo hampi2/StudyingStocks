@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { glossaryTerms, searchTerms } from "@/content/glossary/data";
+import { glossaryTerms, searchTerms } from "@/content/glossary";
 import { useVocabularyStore, useGamificationStore } from "@/lib/store";
 import type { GlossaryCategory } from "@/types";
 
@@ -24,6 +24,8 @@ const categories: (GlossaryCategory | "전체")[] = [
   "기본적분석",
   "파생상품",
   "시장구조",
+  "투자전략",
+  "ETF/펀드",
 ];
 
 // 카테고리 한글 표시
@@ -34,6 +36,8 @@ const categoryLabels: Record<string, string> = {
   기본적분석: "기본적 분석",
   파생상품: "파생상품",
   시장구조: "시장 구조",
+  투자전략: "투자전략",
+  "ETF/펀드": "ETF/펀드",
 };
 
 // 카테고리별 색상
@@ -43,6 +47,8 @@ const categoryColors: Record<string, string> = {
   기본적분석: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200",
   파생상품: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
   시장구조: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200",
+  투자전략: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
+  "ETF/펀드": "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
 };
 
 // 용어 사전 페이지

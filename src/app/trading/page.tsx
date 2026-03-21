@@ -101,12 +101,12 @@ export default function TradingPage() {
       {/* 초기화 확인 */}
       {showReset && (
         <Card className="border-destructive">
-          <CardContent className="p-4 flex items-center justify-between">
+          <CardContent className="p-3 md:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm">
-              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
               <span>포트폴리오를 초기화하면 모든 거래 내역이 삭제됩니다.</span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 shrink-0">
               <Button
                 variant="outline"
                 size="sm"
@@ -132,15 +132,15 @@ export default function TradingPage() {
       {/* 포트폴리오 요약 */}
       <PortfolioSummary />
 
-      {/* 메인 콘텐츠 - 2열 레이아웃 */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* 왼쪽: 주문 폼 */}
-        <div className="lg:col-span-1">
+      {/* 메인 콘텐츠 - 반응형 레이아웃 */}
+      <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* 주문 폼 */}
+        <div className="md:col-span-1">
           <OrderForm />
         </div>
 
-        {/* 오른쪽: 보유종목 + 차트 + 최근거래 */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* 보유종목 + 차트 + 최근거래 */}
+        <div className="md:col-span-1 lg:col-span-2 space-y-4 md:space-y-6">
           <PositionList />
           <PortfolioChart />
           <TradeHistory limit={5} />

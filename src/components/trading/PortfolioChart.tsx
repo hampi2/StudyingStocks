@@ -54,7 +54,7 @@ export function PortfolioChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[250px]">
+        <div className="h-[200px] md:h-[250px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData}>
               <defs>

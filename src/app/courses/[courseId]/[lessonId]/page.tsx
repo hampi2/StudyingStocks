@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { getLessonById } from "@/content/courses/data";
+import { getLessonById } from "@/content/courses";
 import { getQuizByLessonId } from "@/content/courses/quizzes";
 import { useProgressStore } from "@/lib/store";
 

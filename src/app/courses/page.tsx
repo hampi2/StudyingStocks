@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CourseCard } from "@/components/courses/CourseCard";
-import { courses } from "@/content/courses/data";
+import { courses } from "@/content/courses";
 import { Button } from "@/components/ui/button";
 import type { Level } from "@/types";
 

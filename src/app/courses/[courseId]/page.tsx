@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { getCourseById } from "@/content/courses/data";
+import { getCourseById } from "@/content/courses";
 import { getQuizzesByCourseId } from "@/content/courses/quizzes";
 import { useProgressStore } from "@/lib/store";
 

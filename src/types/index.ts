@@ -41,7 +41,9 @@ export type GlossaryCategory =
   | "기술적분석"
   | "기본적분석"
   | "파생상품"
-  | "시장구조";
+  | "시장구조"
+  | "투자전략"
+  | "ETF/펀드";
 
 /** 퀴즈 문제 */
 export interface QuizQuestion {
