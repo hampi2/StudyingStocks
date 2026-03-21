@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, ChevronDown, ChevronUp, ArrowRight, Lightbulb, Filter } from "lucide-react";
 import { etfLessons, etfList } from "@/content/etf/data";
+import { markdownToHtml } from "@/lib/markdown";
 
 /** 시장 필터 옵션 */
 const marketFilters = [
@@ -33,36 +34,15 @@ function formatAum(aum: number, market: string): string {
   return `$${aum}M`;
 }
 
-/** content에서 **bold** 부분을 span으로 변환 */
-function renderContent(text: string) {
-  // 단락별로 분리
-  const paragraphs = text.split("\n\n");
-  return paragraphs.map((para, i) => {
-    // 줄바꿈 유지하면서 **bold** 처리
-    const lines = para.split("\n");
-    return (
-      <div key={i} className="mb-3 last:mb-0">
-        {lines.map((line, j) => {
-          // **bold** 패턴 처리
-          const parts = line.split(/(\*\*[^*]+\*\*)/g);
-          return (
-            <p key={j} className={`${line.startsWith("- ") ? "pl-4" : ""} ${line.startsWith("|") ? "font-mono text-xs" : ""}`}>
-              {parts.map((part, k) => {
-                if (part.startsWith("**") && part.endsWith("**")) {
-                  return (
-                    <span key={k} className="font-bold text-foreground">
-                      {part.slice(2, -2)}
-                    </span>
-                  );
-                }
-                return <span key={k}>{part}</span>;
-              })}
-            </p>
-          );
-        })}
-      </div>
-    );
-  });
+/** 마크다운 content를 HTML로 변환하여 렌더링 */
+function RenderContent({ text }: { text: string }) {
+  const html = markdownToHtml(text);
+  return (
+    <div
+      className="leading-relaxed"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
 }
 
 /** ETF 학습 메인 페이지 */
@@ -132,7 +112,7 @@ export default function EtfPage() {
               </button>
               {openLessonId === lesson.id && (
                 <CardContent className="text-sm text-muted-foreground border-t pt-4">
-                  {renderContent(lesson.content)}
+                  <RenderContent text={lesson.content} />
                 </CardContent>
               )}
             </Card>
@@ -149,10 +129,10 @@ export default function EtfPage() {
               <button
                 key={opt.id}
                 onClick={() => setMarketFilter(opt.id)}
-                className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                className={`px-3 py-1 rounded-full text-sm transition-colors cursor-pointer ${
                   marketFilter === opt.id
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    : "bg-muted text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground hover:shadow-sm"
                 }`}
               >
                 {opt.label}

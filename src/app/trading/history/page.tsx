@@ -108,10 +108,10 @@ export default function TradeHistoryPage() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
               filter === f
                 ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
+                : "bg-muted text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground hover:shadow-sm"
             }`}
           >
             {f}

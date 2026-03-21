@@ -8,6 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { markdownToHtml } from "@/lib/markdown";
 import { getLessonById } from "@/content/courses";
 import { getQuizByLessonId } from "@/content/courses/quizzes";
 import { useProgressStore } from "@/lib/store";
@@ -111,69 +112,13 @@ export default function LessonPage({
   );
 }
 
-// 마크다운 테이블을 HTML 테이블로 변환
-function parseMarkdownTable(tableText: string): string {
-  const rows = tableText.trim().split("\n");
-  if (rows.length < 2) return tableText;
-
-  let html = '<table class="w-full border-collapse my-6 text-sm"><thead>';
-
-  // 헤더 행 (첫 번째 줄)
-  const headerCells = rows[0]
-    .split("|")
-    .filter(Boolean)
-    .map((c) => c.trim());
-  html += "<tr>";
-  for (const cell of headerCells) {
-    html += `<th class="border border-border bg-muted/50 px-4 py-2 text-left font-semibold">${cell}</th>`;
-  }
-  html += "</tr></thead><tbody>";
-
-  // 데이터 행 (구분선 건너뛰고)
-  for (let i = 2; i < rows.length; i++) {
-    const cells = rows[i]
-      .split("|")
-      .filter(Boolean)
-      .map((c) => c.trim());
-    if (cells.length === 0) continue;
-    html += "<tr>";
-    for (const cell of cells) {
-      html += `<td class="border border-border px-4 py-2">${cell}</td>`;
-    }
-    html += "</tr>";
-  }
-
-  html += "</tbody></table>";
-  return html;
-}
-
 // 마크다운 콘텐츠를 HTML로 변환하여 렌더링
 function LessonContent({ content }: { content: string }) {
-  // 1단계: 테이블 블록을 먼저 추출하여 변환
-  // 테이블 패턴: 연속된 | 로 시작하는 줄들
-  let processed = content.replace(
-    /((?:^\|.+\|$\n?){2,})/gm,
-    (match) => parseMarkdownTable(match)
-  );
-
-  // 2단계: 나머지 마크다운 변환
-  processed = processed
-    .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold mt-6 mb-3">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold mt-8 mb-4">$1</h2>')
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/^- (.+)$/gm, '<li class="mb-1 ml-4 list-disc">$1</li>')
-    .replace(/^(\d+)\. (.+)$/gm, '<li class="mb-1 ml-4 list-decimal">$2</li>')
-    .replace(
-      /^> (.+)$/gm,
-      '<blockquote class="border-l-4 border-primary/50 pl-4 py-2 my-4 bg-muted/50 rounded-r text-sm">$1</blockquote>'
-    )
-    .replace(/\n\n/g, '<div class="mb-4"></div>')
-    .replace(/\n/g, "<br/>");
-
+  const html = markdownToHtml(content);
   return (
     <div
       className="leading-relaxed text-foreground"
-      dangerouslySetInnerHTML={{ __html: processed }}
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 }

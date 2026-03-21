@@ -124,7 +124,7 @@ export function OrderForm() {
             className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-bold transition-colors ${
               side === "매수"
                 ? "bg-red-500 text-white"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
+                : "bg-muted text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground hover:shadow-sm"
             }`}
           >
             <ArrowUpCircle className="h-4 w-4" />
@@ -135,7 +135,7 @@ export function OrderForm() {
             className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-bold transition-colors ${
               side === "매도"
                 ? "bg-blue-500 text-white"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
+                : "bg-muted text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground hover:shadow-sm"
             }`}
           >
             <ArrowDownCircle className="h-4 w-4" />

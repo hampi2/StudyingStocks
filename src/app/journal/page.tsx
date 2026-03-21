@@ -155,10 +155,10 @@ export default function JournalPage() {
                   <button
                     key={opt.value}
                     onClick={() => setEmotion(opt.value)}
-                    className={`rounded-full px-3 py-1 text-sm font-medium transition-all ${
+                    className={`rounded-full px-3 py-1 text-sm font-medium transition-all cursor-pointer ${
                       emotion === opt.value
                         ? `${opt.color} ring-2 ring-offset-1 ring-primary/50`
-                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        : "bg-muted text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground hover:shadow-sm"
                     }`}
                   >
                     {opt.label}

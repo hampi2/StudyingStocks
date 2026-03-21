@@ -127,4 +127,15 @@
   html {
     @apply font-sans;
   }
+  /* 클릭 가능한 요소에 pointer 커서 일괄 적용 */
+  button,
+  [role="button"],
+  a,
+  summary,
+  select,
+  [type="button"],
+  [type="submit"],
+  [type="reset"] {
+    cursor: pointer;
+  }
 }

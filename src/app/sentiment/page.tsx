@@ -251,10 +251,10 @@ export default function SentimentPage() {
               <button
                 key={opt.id}
                 onClick={() => setSelectedFilter(opt.id)}
-                className={`px-2.5 md:px-3 py-1 rounded-full text-xs md:text-sm transition-colors ${
+                className={`px-2.5 md:px-3 py-1 rounded-full text-xs md:text-sm transition-colors cursor-pointer ${
                   selectedFilter === opt.id
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    : "bg-muted text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground hover:shadow-sm"
                 }`}
               >
                 {opt.label}
