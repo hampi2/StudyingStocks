@@ -633,3 +633,48 @@ export const useVocabularyStore = create<VocabularyStore>()(
     }
   )
 );
+
+// AI 튜터 채팅 메시지 타입
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+// AI 튜터 대화 저장 스토어
+interface ChatStore {
+  messages: ChatMessage[];
+  // 메시지 추가
+  addMessage: (message: ChatMessage) => void;
+  // 대화 초기화
+  clearMessages: () => void;
+}
+
+// 최대 저장 메시지 수 (최근 50개)
+const MAX_CHAT_MESSAGES = 50;
+
+export const useChatStore = create<ChatStore>()(
+  persist(
+    (set) => ({
+      messages: [],
+
+      addMessage: (message: ChatMessage) => {
+        set((state) => {
+          const updated = [...state.messages, message];
+          // 최대 개수 초과 시 오래된 메시지 제거
+          return {
+            messages: updated.length > MAX_CHAT_MESSAGES
+              ? updated.slice(updated.length - MAX_CHAT_MESSAGES)
+              : updated,
+          };
+        });
+      },
+
+      clearMessages: () => {
+        set({ messages: [] });
+      },
+    }),
+    {
+      name: "studying-stocks-chat", // 로컬스토리지 키
+    }
+  )
+);

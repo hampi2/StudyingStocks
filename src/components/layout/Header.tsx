@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   Sun, Moon, Menu, X, BookOpen, TrendingUp, BarChart3,
   Gamepad2, Wallet, FileText, Sparkles, PenLine, User,
-  Heart, Layers, Flag, BookMarked, ChevronDown,
+  Heart, Layers, Flag, BookMarked, ChevronDown, MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +31,7 @@ const allNavItems = [
   { href: "/vocabulary", label: "나의 단어장", icon: BookMarked, group: "도구" },
   { href: "/marathon", label: "학습 마라톤", icon: Flag, group: "도구" },
   { href: "/recommend", label: "학습 추천", icon: Sparkles, group: "도구" },
+  { href: "/ai-tutor", label: "AI 튜터", icon: MessageCircle, group: "도구" },
   { href: "/glossary", label: "용어 사전", icon: BookOpen, group: "학습" },
   { href: "/quiz", label: "퀴즈", icon: TrendingUp, group: "학습" },
   { href: "/profile", label: "프로필", icon: User, group: "도구" },
@@ -70,6 +71,7 @@ const navGroups = [
       { href: "/vocabulary", label: "나의 단어장", icon: BookMarked },
       { href: "/marathon", label: "학습 마라톤", icon: Flag },
       { href: "/recommend", label: "학습 추천", icon: Sparkles },
+      { href: "/ai-tutor", label: "AI 튜터", icon: MessageCircle },
     ],
   },
 ];

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TrendingUp } from "lucide-react";
+import Image from "next/image";
 
 // 푸터 컴포넌트
 export function Footer() {
@@ -10,7 +10,7 @@ export function Footer() {
           {/* 브랜드 */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <TrendingUp className="h-5 w-5 text-primary" />
+              <Image src="/logo.svg" alt="StudyingStocks" width={22} height={22} className="rounded" />
               <span className="font-bold">StudyingStocks</span>
             </div>
             <p className="text-sm text-muted-foreground">

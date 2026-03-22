@@ -10,6 +10,8 @@ import {
   ArrowRight,
   RotateCcw,
   Trophy,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +20,8 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { getQuizById } from "@/content/courses/quizzes";
 import { useProgressStore } from "@/lib/store";
+import { useAI } from "@/lib/hooks";
+import { markdownToHtml } from "@/lib/markdown";
 
 // 퀴즈 풀기 페이지
 export default function QuizPage({
@@ -46,6 +50,7 @@ function QuizPlayer({
   const [isFinished, setIsFinished] = useState(false);
 
   const saveQuizResult = useProgressStore((s) => s.saveQuizResult);
+  const { result: aiExplanation, isLoading: aiLoading, error: aiError, generate: aiGenerate, reset: aiReset } = useAI();
   const currentQuestion = quiz.questions[currentIndex];
   const progress =
     ((currentIndex + (isAnswered ? 1 : 0)) / quiz.questions.length) * 100;
@@ -66,6 +71,7 @@ function QuizPlayer({
       setCurrentIndex((prev) => prev + 1);
       setSelectedAnswer(null);
       setIsAnswered(false);
+      aiReset();
     } else {
       // 퀴즈 완료 - 결과 저장
       saveQuizResult({
@@ -85,6 +91,7 @@ function QuizPlayer({
     setIsAnswered(false);
     setCorrectCount(0);
     setIsFinished(false);
+    aiReset();
   };
 
   // 결과 화면
@@ -231,6 +238,54 @@ function QuizPlayer({
               <p className="text-sm text-muted-foreground">
                 {currentQuestion.explanation}
               </p>
+            </div>
+          )}
+
+          {/* AI 상세 해설 (오답일 때만) */}
+          {isAnswered && selectedAnswer !== currentQuestion.correctIndex && (
+            <div className="mt-2">
+              {!aiExplanation && !aiLoading && !aiError && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    aiGenerate("/api/ai/quiz", {
+                      question: currentQuestion.question,
+                      options: currentQuestion.options,
+                      correctIndex: currentQuestion.correctIndex,
+                      selectedIndex: selectedAnswer,
+                      explanation: currentQuestion.explanation,
+                    })
+                  }
+                  className="gap-1.5"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  AI 상세 해설 보기
+                </Button>
+              )}
+              {aiLoading && (
+                <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+                  <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    AI가 해설을 생성하고 있습니다...
+                  </span>
+                </div>
+              )}
+              {aiExplanation && (
+                <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+                  <p className="text-sm font-medium mb-1 flex items-center gap-1.5">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    AI 상세 해설
+                  </p>
+                  <div
+                    className="text-sm text-muted-foreground"
+                    dangerouslySetInnerHTML={{ __html: markdownToHtml(aiExplanation) }}
+                  />
+                </div>
+              )}
+              {aiError && (
+                <p className="text-sm text-destructive">{aiError}</p>
+              )}
             </div>
           )}
 

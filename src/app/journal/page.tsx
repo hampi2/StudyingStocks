@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useJournalStore, useGamificationStore } from "@/lib/store";
 import type { EmotionTag } from "@/types";
-import { BookOpen, Plus, Trash2, Filter, X } from "lucide-react";
+import { BookOpen, Plus, Trash2, Filter, X, Sparkles, Loader2 } from "lucide-react";
+import { useAI } from "@/lib/hooks";
+import { markdownToHtml } from "@/lib/markdown";
 
 /** 감정 태그 정보 */
 const emotionOptions: { value: EmotionTag; label: string; color: string }[] = [
@@ -28,6 +30,11 @@ export default function JournalPage() {
   const [mounted, setMounted] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [filterEmotion, setFilterEmotion] = useState<EmotionTag | "전체">("전체");
+  // AI 피드백 (종합 분석)
+  const { result: aiOverview, isLoading: aiOverviewLoading, error: aiOverviewError, generate: aiOverviewGenerate } = useAI();
+  // AI 피드백 (개별 일지) - 현재 열린 일지 ID 관리
+  const [aiEntryId, setAiEntryId] = useState<string | null>(null);
+  const { result: aiEntry, isLoading: aiEntryLoading, error: aiEntryError, generate: aiEntryGenerate, reset: aiEntryReset } = useAI();
 
   // 폼 상태
   const [title, setTitle] = useState("");
@@ -128,6 +135,61 @@ export default function JournalPage() {
             </button>
           )}
         </div>
+      )}
+
+      {/* AI 종합 분석 */}
+      {entries.length >= 3 && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-4">
+            {!aiOverview && !aiOverviewLoading && !aiOverviewError && (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium flex items-center gap-1.5">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    AI 종합 심리 분석
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    최근 일지 패턴을 AI가 분석합니다
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() =>
+                    aiOverviewGenerate("/api/ai/journal", {
+                      mode: "overview",
+                      entries: entries.slice(0, 10),
+                    })
+                  }
+                  className="gap-1.5"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  분석하기
+                </Button>
+              </div>
+            )}
+            {aiOverviewLoading && (
+              <div className="flex items-center gap-2 justify-center py-3">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                <span className="text-sm text-muted-foreground">AI가 분석 중...</span>
+              </div>
+            )}
+            {aiOverview && (
+              <div>
+                <p className="text-sm font-medium mb-2 flex items-center gap-1.5">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  AI 종합 분석 결과
+                </p>
+                <div
+                  className="text-sm leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: markdownToHtml(aiOverview) }}
+                />
+              </div>
+            )}
+            {aiOverviewError && (
+              <p className="text-sm text-destructive">{aiOverviewError}</p>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* 작성 폼 */}
@@ -293,6 +355,47 @@ export default function JournalPage() {
                   <p className="text-xs font-bold text-primary mb-1">💡 배운 점</p>
                   <p className="text-sm">{entry.lesson}</p>
                 </div>
+
+                {/* AI 개별 피드백 */}
+                {aiEntryId !== entry.id && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setAiEntryId(entry.id);
+                      aiEntryReset();
+                      aiEntryGenerate("/api/ai/journal", {
+                        mode: "single",
+                        entry,
+                      });
+                    }}
+                    className="gap-1.5"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    AI 피드백
+                  </Button>
+                )}
+                {aiEntryId === entry.id && aiEntryLoading && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    AI가 분석 중...
+                  </div>
+                )}
+                {aiEntryId === entry.id && aiEntry && (
+                  <div className="rounded-lg bg-violet-50 border border-violet-200 dark:bg-violet-900/20 dark:border-violet-800 p-3">
+                    <p className="text-xs font-bold text-violet-600 dark:text-violet-400 mb-1 flex items-center gap-1">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      AI 심리 분석
+                    </p>
+                    <div
+                      className="text-sm leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: markdownToHtml(aiEntry) }}
+                    />
+                  </div>
+                )}
+                {aiEntryId === entry.id && aiEntryError && (
+                  <p className="text-sm text-destructive">{aiEntryError}</p>
+                )}
               </CardContent>
             </Card>
           ))}

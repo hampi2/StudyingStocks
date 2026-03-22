@@ -6,7 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { useProgressStore, useTradingStore, useGamificationStore, useOnboardingStore } from "@/lib/store";
+import { useProgressStore, useTradingStore, useGamificationStore, useOnboardingStore, useJournalStore } from "@/lib/store";
+import { useAI } from "@/lib/hooks";
+import { markdownToHtml } from "@/lib/markdown";
 import type { InvestorType } from "@/types";
 import { courses } from "@/content/courses";
 import { quizzes } from "@/content/courses/quizzes";
@@ -20,6 +22,7 @@ import {
   Lightbulb,
   ChevronRight,
   CheckCircle,
+  Loader2,
 } from "lucide-react";
 
 /** 학습 추천 생성 로직 (로컬 + 투자성향 반영) */
@@ -182,6 +185,8 @@ export default function RecommendPage() {
   const trading = useTradingStore();
   const gamification = useGamificationStore();
   const onboarding = useOnboardingStore();
+  const journal = useJournalStore();
+  const { result: aiAnalysis, isLoading: aiLoading, error: aiError, generate: aiGenerate } = useAI();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -310,6 +315,57 @@ export default function RecommendPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* AI 맞춤 분석 */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            AI 맞춤 학습 분석
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {!aiAnalysis && !aiLoading && !aiError && (
+            <div className="text-center py-4">
+              <p className="text-sm text-muted-foreground mb-3">
+                AI가 학습 데이터를 분석하여 맞춤형 가이드를 제공합니다
+              </p>
+              <Button
+                onClick={() =>
+                  aiGenerate("/api/ai/recommend", {
+                    completedLessons: progress.completedLessons,
+                    quizResults: progress.quizResults,
+                    investorType: onboarding.investorType,
+                    level: gamification.level,
+                    streak: gamification.streak,
+                    tradeCount: trading.orders.length,
+                    journalCount: journal.entries.length,
+                  })
+                }
+                className="gap-1.5"
+              >
+                <Sparkles className="h-4 w-4" />
+                AI 분석 받기
+              </Button>
+            </div>
+          )}
+          {aiLoading && (
+            <div className="flex items-center justify-center gap-2 py-6">
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <span className="text-sm text-muted-foreground">AI가 분석 중입니다...</span>
+            </div>
+          )}
+          {aiAnalysis && (
+            <div
+              className="text-sm leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: markdownToHtml(aiAnalysis) }}
+            />
+          )}
+          {aiError && (
+            <p className="text-sm text-destructive text-center py-4">{aiError}</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* 추천 목록 */}
       <Card>

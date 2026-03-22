@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { samsungFinancials, appleFinancials } from "@/content/fundamental/data";
 import type { FinancialStatement, FinancialItem } from "@/types";
-import { FileText, Calculator, BarChart3, ChevronRight, X } from "lucide-react";
+import { FileText, Calculator, BarChart3, ChevronRight, X, Sparkles, Loader2 } from "lucide-react";
+import { useAI } from "@/lib/hooks";
+import { markdownToHtml } from "@/lib/markdown";
 
 /** 재무제표 항목 표시 유형 */
 type StatementType = "incomeStatement" | "balanceSheet" | "cashFlow";
@@ -48,7 +50,23 @@ function calcYoY(current: number, previous: number): string {
 }
 
 /** 항목 설명 팝업 컴포넌트 */
-function ItemPopup({ item, currency, onClose }: { item: FinancialItem; currency: string; onClose: () => void }) {
+function ItemPopup({
+  item,
+  currency,
+  companyName,
+  ticker,
+  years,
+  onClose,
+}: {
+  item: FinancialItem;
+  currency: string;
+  companyName: string;
+  ticker: string;
+  years: string[];
+  onClose: () => void;
+}) {
+  const { result: aiText, isLoading: aiLoading, error: aiError, generate: aiGenerate } = useAI();
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <Card className="w-full max-w-md" onClick={(e) => e.stopPropagation()}>
@@ -103,6 +121,52 @@ function ItemPopup({ item, currency, onClose }: { item: FinancialItem; currency:
               ))}
             </div>
           </div>
+
+          {/* AI 해석 */}
+          {!aiText && !aiLoading && !aiError && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                aiGenerate("/api/ai/financial", {
+                  companyName,
+                  ticker,
+                  itemLabel: item.label,
+                  itemLabelEn: item.labelEn,
+                  values: item.values,
+                  years,
+                  description: item.description,
+                  formula: item.formula,
+                  currency,
+                })
+              }
+              className="w-full gap-1.5"
+            >
+              <Sparkles className="h-4 w-4" />
+              AI 해석 보기
+            </Button>
+          )}
+          {aiLoading && (
+            <div className="flex items-center justify-center gap-2 py-3">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              <span className="text-sm text-muted-foreground">AI가 해석 중...</span>
+            </div>
+          )}
+          {aiText && (
+            <div className="rounded-lg bg-primary/5 border border-primary/20 p-3">
+              <p className="text-xs font-bold text-primary mb-1 flex items-center gap-1">
+                <Sparkles className="h-3.5 w-3.5" />
+                AI 해석
+              </p>
+              <div
+                className="text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: markdownToHtml(aiText) }}
+              />
+            </div>
+          )}
+          {aiError && (
+            <p className="text-sm text-destructive">{aiError}</p>
+          )}
         </CardContent>
       </Card>
     </div>
@@ -315,6 +379,9 @@ export default function FundamentalPage() {
         <ItemPopup
           item={selectedItem}
           currency={data.currency}
+          companyName={data.companyName}
+          ticker={data.ticker}
+          years={data.years}
           onClose={() => setSelectedItem(null)}
         />
       )}
